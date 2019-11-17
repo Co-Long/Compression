@@ -1,0 +1,5 @@
+﻿  Huffman.cpp
+E:\Bai tap\CTDL_Seminar_2\18120506_18120520\compression\Huffman.cpp(45,20): warning C4018:  '<': signed/unsigned mismatch
+E:\Bai tap\CTDL_Seminar_2\18120506_18120520\compression\Huffman.cpp(72,11): warning C4018:  '<': signed/unsigned mismatch
+E:\Bai tap\CTDL_Seminar_2\18120506_18120520\compression\Huffman.cpp(75,12): warning C4018:  '<': signed/unsigned mismatch
+  compression.vcxproj -> E:\Bai tap\CTDL_Seminar_2\18120506_18120520\Debug\compression.exe
