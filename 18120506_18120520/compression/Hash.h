@@ -8,22 +8,39 @@ using namespace std;
 #define MAX 256
 
 //Hash Table
+template<class T>
 class HashTable {
 private:
-	vector<int> table;
+	vector<T> table;
 public:
-	HashTable() {
-		table.resize(MAX, 0);
+	HashTable(string type) {
+		if (type == "int") 
+			table.resize(MAX, 0);
+		else
+			table.resize(MAX);
 	}
 	//Get hash key for character
 	//Input: char, output: hashKey
 	int getHash(char c) {
+	/*	cout << (int)c;
+		int temp = (int)c;
+		if (temp < 0) temp = abs(temp) + 255;*/
 		return (int)c % MAX;
 	}
 	//Insert freq to table using hashKey
 	void insert(char c) {
 		int key = getHash(c);
 		table[key]++;
+	}
+	// Insert with value
+	void insert(char c, T code) {
+		int key = getHash(c);
+		table[key] = code;
+	}
+	// Get value from key
+	T get(char c) {
+		int key = getHash(c);
+		return table[key];
 	}
 	//Return table
 	const vector<int>& getTable() {

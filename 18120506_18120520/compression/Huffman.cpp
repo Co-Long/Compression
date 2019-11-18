@@ -175,23 +175,36 @@ HuffNode* buildHuffmanTree(vector<HuffNode*> freqTable)
 	return extractMin(minHeap);
 }
 
+// Chuyển bit array sang dạng string
+string bitArrToString(int arr[], int n) {
+	string str;
+
+	for (int i = 0; i < n; i++)
+	{
+		if (arr[i] == 1) str += '1';
+		else str += '0';
+	}
+
+	return str;
+}
+
 // In bảng mã ra màn hình
 // Dùng mảng arr để lưu mã
-void printCodes(HuffNode* root, int arr[], int top)
+void printCodes(HuffNode* root, int arr[], int top, vector<HuffmanCode*> &out)
 
 {
 	// Gán 0 nếu là trái
 	if (root->left) {
 
 		arr[top] = 0;
-		printCodes(root->left, arr, top + 1);
+		printCodes(root->left, arr, top + 1, out);
 	}
 
 	// Gán 1 nếu là phải
 	if (root->right) {
 
 		arr[top] = 1;
-		printCodes(root->right, arr, top + 1);
+		printCodes(root->right, arr, top + 1, out);
 	}
 
 	//Nếu là lá thì in ra giá trị của lá và mã bit sau khi nén của nó
@@ -199,21 +212,27 @@ void printCodes(HuffNode* root, int arr[], int top)
 
 		cout << root->data<<": ";
 		printArr(arr, top);
+
+		HuffmanCode* huffcode = new HuffmanCode;
+		huffcode->c = root->data;
+		huffcode->code = bitArrToString(arr, top);
+		out.push_back(huffcode);
 	}
 }
 
 // The main function that builds a 
 // Huffman Tree and print codes by traversing 
 // the built Huffman Tree 
-void HuffmanCodes(vector<HuffNode*> freqTable)
+vector<HuffmanCode*> HuffmanCodes(vector<HuffNode*> freqTable)
 {
-
 	// Tạo cây Huffman 
 	HuffNode* root = buildHuffmanTree(freqTable);
 
 	// Print Huffman codes using 
 	// the Huffman tree built above 
 	int arr[MAX_TREE_HT], top = 0;
+	vector<HuffmanCode*> out(0);
 
-	printCodes(root, arr, top);
+	printCodes(root, arr, top, out);
+	return out;
 }

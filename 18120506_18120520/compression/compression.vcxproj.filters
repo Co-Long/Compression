@@ -24,12 +24,18 @@
     <ClCompile Include="Hash.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Compress.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Huffman.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Hash.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Compress.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

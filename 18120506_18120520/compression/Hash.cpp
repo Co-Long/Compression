@@ -6,7 +6,7 @@ using namespace std;
 //Init Frequence Table
 //Input: text, output: HuffNode Table
 vector<HuffNode*> initFreqTable(string str) {
-	HashTable hash;
+	HashTable<int> hash("int");
 	vector<HuffNode*> freqTable(0);
 
 	for (int i = 0; i < str.length(); i++) {

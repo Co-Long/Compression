@@ -32,6 +32,11 @@ struct MinHeap {
 	HuffNode** array;
 };
 
+struct HuffmanCode {
+	char c;
+	string code;
+};
+
 // Tạo một Node mới
 HuffNode* newNode(char data, unsigned freq);
 // Tạo một cây mới, cấp phát vùng nhớ
@@ -63,6 +68,8 @@ bool isLeaf(HuffNode* root);
 HuffNode* buildHuffmanTree(vector<HuffNode*> freqTable);
 // In bảng mã ra màn hình
 // Dùng mảng arr để lưu mã
-void printCodes(HuffNode* root, int arr[], int top, int out[]);
-void HuffmanCodes(vector<HuffNode*> freqTable);
+void printCodes(HuffNode* root, int arr[], int top, vector<HuffmanCode*>& out);
+// Chuyển bit array sang dạng string
+string bitArrToString(int arr[], int n);
+vector<HuffmanCode*> HuffmanCodes(vector<HuffNode*> freqTable);
 
