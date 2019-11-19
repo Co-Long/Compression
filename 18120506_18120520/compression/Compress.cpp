@@ -41,23 +41,10 @@ string getSequenceOfBit(string text, HashTable<string>* table) {
 	return sequence;
 }
 
-// Taòo daŞy maŞ hoìa baÒng tra cıìu neìn tıÌ Huffman Codes
-string encodeCompressTable(vector<HuffmanCode*> huffCodes) {
-	string encoded = "";
-
-	for (int i = 0; i < huffCodes.size(); i++)
-	{
-		// môŞi mâŞu encoded = kiì tıò gôìc + daòng kiì tıò cuÒa code
-		encoded = encoded + huffCodes[i]->c + bitsToChar(huffCodes[i]->code);
-	}
-
-	return encoded;
-}
-
 // HaÌm thêm sôì 0 sau daŞy cho ğuÒ bit vaÌ traÒ vêÌ sôì bit ğaŞ thêm
 int fillBit(string &sequenceOfBit) {
 	int addedBit = 8 - (sequenceOfBit.length() % 8);
-
+	cout << "addbit: " << addedBit << endl;
 	// Thêm sôì 0 sau daŞy cho ğuÒ bit
 	for (int i = 0; i < addedBit; i++)
 	{
@@ -79,36 +66,38 @@ string getNewText(string sequenceOfBit) {
 		newText += bitsToChar(tempBit);
 		pos += 8;
 	}
-
+	//cout << newText.length();
 	return newText;
 }
 
-void compressToFile(string filename, vector<HuffmanCode*> huffCodes, string text) {
+void compressToFile(string filename, vector<HuffNode*> freqTable, string text) {
+	vector<HuffmanCode*> huffCodes = HuffmanCodes(freqTable);
 	HashTable<string>* table = buildCompressTable(huffCodes);
-
-	// Taòo maŞ hoìa baÒng tra cıìu tıÌ huffCodes
-	string encodedCompressTable = encodeCompressTable(huffCodes);
 
 	// Taòo daŞy bit tıÌ text dıòa trên baÒng tra cıìu neìn
 	string sequenceOfBit = getSequenceOfBit(text, table);
 
 	// Thêm sôì 0 vaÌo sau daŞy bit cho ğôò daÌi laÌ bôòi cuÒa 8
 	int addedBit = fillBit(sequenceOfBit);
-
+	cout << "addbit: " << addedBit << endl;
 	string newText = getNewText(sequenceOfBit);
-	cout << "\n" << sequenceOfBit << "\n";
-	cout << "\n" << newText << "\n";
+	cout << "\n" << sequenceOfBit << "a\n";
 
 	ofstream fo;
-	fo.open(filename);
+	fo.open(filename, ios::binary);
 
 	if (fo) {
-		// Ghi sôì kiì tıò trong header vaÌo doÌng ğâÌu cuÒa line
-		fo << encodedCompressTable.length() + 1 << endl;
-		// Ghi Header (kiì tıò dı cuÌng daŞy maŞ hoìa baÒng tra cıìu) 
-		fo << addedBit << encodedCompressTable;
-		// Ghi nôòi dung neìn
-		fo << newText;
+		int size = freqTable.size();
+		fo.write((char*)&size, sizeof(int));
+
+		for (int i = 0; i < size; i++)
+		{
+			fo.write((char*)freqTable[i], sizeof(HuffNode));
+		}
+
+		fo.write((char*)& addedBit, sizeof(int));
+
+		fo.write(newText.c_str(), newText.length());
 
 		fo.close();
 	}

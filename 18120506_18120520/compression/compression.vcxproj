@@ -152,12 +152,14 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Compress.cpp" />
+    <ClCompile Include="Decompress.cpp" />
     <ClCompile Include="Hash.cpp" />
     <ClCompile Include="Huffman.cpp" />
     <ClCompile Include="main.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Compress.h" />
+    <ClInclude Include="Decompress.h" />
     <ClInclude Include="Hash.h" />
     <ClInclude Include="Huffman.h" />
   </ItemGroup>

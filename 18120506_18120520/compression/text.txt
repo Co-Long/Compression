@@ -1,4 +1,21 @@
-aaa
-bbbbbb
-aaabbb
-ccc
+-----Text 1-----
+It's been a while seen I last saw the blue sky. I still remember the sun shined through trees and cast light on my face, birds were singing and cats laid on stair.
+People were doing their own stuff, cleaning cars, cutting grass, going shopping,...They enjoyed their daily life, made plan, had positive thought.
+Then everything has changed, life's become busy, there're many things that you have to deal with in your life. It's such a hard time for a young man who just started walking on his own way.
+-----Text 2-----
+AA tree is a binary tree. So is AVL. But which one is better?
+Data structures and algorithms is an important subject and it's so hard (just 60% student passed). 
+Linked - list is a dynamic array, isn't it?
+2^16-1=65536 which is the size of unsigned short.
+log(100)=2.
+int* p=new int[3];
+a=110;
+b=60;
+d=1977;
+for(int i=0;i<3;i++){
+p[i]=i+3;
+}
+cout<<a-p[0];
+cout<<b-p[1];
+cout<<d-p[2];
+delete[] p;

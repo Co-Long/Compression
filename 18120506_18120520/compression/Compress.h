@@ -14,5 +14,5 @@ HashTable<string>* buildCompressTable(vector<HuffmanCode*> huffCodes);
 // Taòo daŞy bit tıÌ text dıòa vaÌo baÒn tra cıìu neìn
 string getSequenceOfBit(string text, HashTable<string>* table);
 // Neìn vaÌo file
-void compressToFile(string filename, vector<HuffmanCode*> huffCodes, string text);
+void compressToFile(string filename, vector<HuffNode*> freqTable, string text);
 
