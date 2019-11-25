@@ -1,23 +1,23 @@
-#include "Compress.h"
+ï»¿#include "Compress.h"
 
-// ChuyêÒn daŞy bit thaÌnh kiì tıò
+// Chuyá»ƒn dÃ£y bit thÃ nh kÃ½ tá»±
 char bitsToChar(string bits) {
 	int dec = 0;
 
 	for (int i = 0; i < bits.length(); i++)
 	{
-		// Thêm bit vaÌo trong dec 
+		// ThÃªm bit vaÃŒo trong dec 
 		if (bits[i] == '1') dec += 1;
-		// Diòch bit qua traìi
+		// Dá»‹ch bit qua trÃ¡i
 		dec <<= 1;
 	}
-	// Diòch bit qua phaÒi ğêÒ loaòi boÒ bit dı cuôìi
+	// DiÃ²ch bit qua phaÃ’i Ã°ÃªÃ’ loaÃ²i boÃ’ bit dÃ½ cuÃ´Ã¬i
 	dec >>= 1;
 
 	return (char)dec;
 }
 
-// Xây dıòng baÒng tra cıìu neìn tıÌ Huffman Codes
+// XÃ¢y dÃ½Ã²ng baÃ’ng tra cÃ½Ã¬u neÃ¬n tÃ½ÃŒ Huffman Codes
 HashTable<string>* buildCompressTable(vector<HuffmanCode*> huffCodes) {
 	HashTable<string>* table = new HashTable<string>("string");
 	
@@ -29,7 +29,7 @@ HashTable<string>* buildCompressTable(vector<HuffmanCode*> huffCodes) {
 	return table;
 }
 
-// Taòo daŞy bit tıÌ text dıòa vaÌo baÒn tra cıìu neìn
+// TaÃ²o daÃy bit tÃ½ÃŒ text dÃ½Ã²a vaÃŒo baÃ’n tra cÃ½Ã¬u neÃ¬n
 string getSequenceOfBit(string text, HashTable<string>* table) {
 	string sequence = "";
 
@@ -41,11 +41,11 @@ string getSequenceOfBit(string text, HashTable<string>* table) {
 	return sequence;
 }
 
-// HaÌm thêm sôì 0 sau daŞy cho ğuÒ bit vaÌ traÒ vêÌ sôì bit ğaŞ thêm
+// HaÃŒm thÃªm sÃ´Ã¬ 0 sau daÃy cho Ã°uÃ’ bit vaÃŒ traÃ’ vÃªÃŒ sÃ´Ã¬ bit Ã°aÃ thÃªm
 int fillBit(string &sequenceOfBit) {
 	int addedBit = 8 - (sequenceOfBit.length() % 8);
 	cout << "addbit: " << addedBit << endl;
-	// Thêm sôì 0 sau daŞy cho ğuÒ bit
+	// ThÃªm sÃ´Ã¬ 0 sau daÃy cho Ã°uÃ’ bit
 	for (int i = 0; i < addedBit; i++)
 	{
 		sequenceOfBit += '0';
@@ -54,13 +54,13 @@ int fillBit(string &sequenceOfBit) {
 	return addedBit;
 }
 
-// Taòo text mõìi tıÌ daŞy bit
+// Táº¡o chuá»—i text má»›i tá»« dÃ£y bit má»›i
 string getNewText(string sequenceOfBit) {
 	int pos = 0;
 	int length = sequenceOfBit.length();
 	string newText = "";
 
-	// Duyêòt môŞi 8 bit ğêÒ chuyêÒn thaÌnh char
+	// DuyÃªÃ²t mÃ´Ãi 8 bit Ã°ÃªÃ’ chuyÃªÃ’n thaÃŒnh char
 	while (pos < length) {
 		string tempBit = sequenceOfBit.substr(pos, 8);
 		newText += bitsToChar(tempBit);
@@ -74,10 +74,10 @@ void compressToFile(string filename, vector<HuffNode*> freqTable, string text) {
 	vector<HuffmanCode*> huffCodes = HuffmanCodes(freqTable);
 	HashTable<string>* table = buildCompressTable(huffCodes);
 
-	// Taòo daŞy bit tıÌ text dıòa trên baÒng tra cıìu neìn
+	// TaÃ²o daÃy bit tÃ½ÃŒ text dÃ½Ã²a trÃªn baÃ’ng tra cÃ½Ã¬u neÃ¬n
 	string sequenceOfBit = getSequenceOfBit(text, table);
 
-	// Thêm sôì 0 vaÌo sau daŞy bit cho ğôò daÌi laÌ bôòi cuÒa 8
+	// ThÃªm sÃ´Ã¬ 0 vaÃŒo sau daÃy bit cho Ã°Ã´Ã² daÃŒi laÃŒ bÃ´Ã²i cuÃ’a 8
 	int addedBit = fillBit(sequenceOfBit);
 	cout << "addbit: " << addedBit << endl;
 	string newText = getNewText(sequenceOfBit);
@@ -101,4 +101,46 @@ void compressToFile(string filename, vector<HuffNode*> freqTable, string text) {
 
 		fo.close();
 	}
+}
+
+void compressFile(const wchar_t path[100]) {
+
+	wstring str = getStringFromFile(path);
+	string content = WidestringToString(str);
+	vector<HuffNode*> freqTable = initFreqTable(content);
+	string fname = "compress";
+
+	compressToFile("compress", freqTable, content);
+
+}
+
+void compressFolder(const wchar_t path[100]) {
+	WIN32_FIND_DATA data;
+	// TÃ¬m táº­p tin Ä‘áº§u tiÃªn
+	HANDLE hFile = FindFirstFile(path, &data);
+	wstring s;
+
+	do {
+		//in tÃªn thÆ° má»¥c, táº­p tin ra mÃ n hÃ¬nh
+		wprintf(L"%s\n", data.cFileName);
+		//Náº¿u lÃ  thÆ° má»¥c
+		if (data.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY) {
+			compressFolder(data.cFileName);
+		}
+
+		//Náº¿u lÃ  táº­p tin
+		if (!(data.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY)) {
+			//NÃ©n táº­p tin
+			/*wstring str = getStringFromFile(data.cFileName);
+			string content = WidestringToString(str);
+			vector<HuffNode*> freqTable = initFreqTable(content);
+			string fname = "compress";
+
+			compressToFile("compress", freqTable, content);*/
+			compressFile(data.cFileName);
+		}
+
+	} while (FindNextFile(hFile, &data)); // Cho Ä‘áº¿n khi khÃ´ng cÃ²n táº­p tin káº¿
+
+	FindClose(hFile);
 }

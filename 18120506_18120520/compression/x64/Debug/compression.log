@@ -1,2 +1,7 @@
-﻿  UnicodeFIle.cpp
+﻿  Compress.cpp
+E:\Bai tap\CTDL_Seminar_2\Compression\18120506_18120520\compression\Compress.cpp(60,37): warning C4267:  'initializing': conversion from 'size_t' to 'int', possible loss of data
+  UnicodeFIle.cpp
+  main.cpp
+  Generating Code...
+E:\Bai tap\CTDL_Seminar_2\Compression\18120506_18120520\compression\Compress.cpp(90,30): warning C4267:  'initializing': conversion from 'size_t' to 'int', possible loss of data
   compression.vcxproj -> E:\Bai tap\CTDL_Seminar_2\Compression\18120506_18120520\x64\Debug\compression.exe

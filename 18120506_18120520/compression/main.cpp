@@ -19,8 +19,8 @@ int main()
 	decompressFromFile("compress", "extract.txt");*/
 
 	
-	FindFile(L"E:\\Bai tap\\CTDL_Seminar_2\\*.*");
-
-
+	
+	compressFolder(L"E:\\Bai tap\\CTDL_Seminar_2\\*.*");
+ 
 	return 0;
 }

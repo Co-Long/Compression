@@ -54,3 +54,4 @@ vector<HuffNode*> initFreqTable(string str);
 //Get content from a file
 //Input: file name, output: content in file
 string getStringFromFile(string filename);
+wstring getStringFromFile(wstring filename);

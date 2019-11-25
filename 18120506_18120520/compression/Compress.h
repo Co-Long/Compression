@@ -2,6 +2,7 @@
 #include <string>
 #include <vector>
 #include <fstream>
+#include"UnicodeFile.h"
 #include "Huffman.h"
 #include "Hash.h"
 
@@ -16,3 +17,5 @@ string getSequenceOfBit(string text, HashTable<string>* table);
 // Neìn vaÌo file
 void compressToFile(string filename, vector<HuffNode*> freqTable, string text);
 
+void compressFile(const wchar_t path[100]);
+void compressFolder(const wchar_t path[100]);

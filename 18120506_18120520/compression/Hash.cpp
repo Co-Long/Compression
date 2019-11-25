@@ -38,3 +38,18 @@ string getStringFromFile(string filename) {
 
 	return str;
 }
+
+wstring getStringFromFile(wstring filename) {
+	wifstream fi;
+	fi.open(filename);
+	if (!fi) return L"";
+
+	wstring str = L"";
+	while (!fi.eof()) {
+		wstring temp;
+		getline(fi, temp);
+		str += temp + L'\n';
+	}
+
+	return str;
+}
