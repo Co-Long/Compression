@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 #include <string>
 #include <vector>
 #include <fstream>
@@ -8,14 +8,18 @@
 
 using namespace std;
 
-// Chuy��n da�y bit sang ki� t�� 
+// ChuyêÒn daÞy bit sang kiì týò 
 char bitsToChar(string code);
-// X�y d��ng ba�ng tra c��u ne�n t�� Huffman Codes
+// Xây dýòng baÒng tra cýìu neìn týÌ Huffman Codes
 HashTable<string>* buildCompressTable(vector<HuffmanCode*> huffCodes);
-// Ta�o da�y bit t�� text d��a va�o ba�n tra c��u ne�n
+// Taòo daÞy bit týÌ text dýòa vaÌo baÒn tra cýìu neìn
 string getSequenceOfBit(string text, HashTable<string>* table);
-// Ne�n va�o file
+// Neìn vaÌo file
 void compressToFile(string filename, vector<HuffNode*> freqTable, string text);
 
-void compressFile(const wchar_t path[100]);
-void compressFolder(const wchar_t path[100]);
+//Input: Đường dẫn đến tập tin cần nén, tập tin output sau khi nén
+void compressFile(const boost::filesystem::path& relative_path, string output);
+//Input: Đường dẫn thư mục cần nén, đây có phải là thư mục gốc hay sub Folder, đường dẫn sub Folder
+//Nếu là thư mục gốc thì tham số cuối là chuỗi rỗng
+void compressFolder(const boost::filesystem::path& relative_path, bool root, string rname);
+

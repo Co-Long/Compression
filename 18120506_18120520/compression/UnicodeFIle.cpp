@@ -55,3 +55,33 @@ std::string WidestringToString(std::wstring wstr)
 	return converterX.to_bytes(wstr);
 }
 	
+void PrintFullPath(wchar_t partialPath[100])
+{
+	wchar_t full[_MAX_PATH];
+	if (_wfullpath(full, partialPath, _MAX_PATH) != NULL)
+		wprintf(L"Full path is: %s\n", full);
+	else
+		printf("Invalid path\n"); 
+}
+
+void info(const boost::filesystem::path& relative_path)
+{
+	using namespace boost::filesystem;
+
+	std::cout << "rel path: " << relative_path << '\n';
+	std::cout << "cwd: " << current_path() << '\n'; // current working directory
+	
+	
+
+	const path absolute_path = absolute(relative_path);
+	//Thay đổi thư mục làm việc
+	//_chdir(const char)
+	_chdir("\.."); 
+	std::cout << "New cwd: " << current_path() << '\n';
+	std::cout << "absolute: " << absolute_path << '\n'
+		<< "root dir: " << absolute_path.root_directory() << '\n'
+		<< "root path: " << absolute_path.root_path() << '\n'
+		<< "parent dir: " << absolute_path.parent_path() << '\n'
+		<< "file name: " << absolute_path.filename() << '\n'
+		<< "-----------------------------------------------\n";
+}

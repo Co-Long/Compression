@@ -79,9 +79,7 @@ void compressToFile(string filename, vector<HuffNode*> freqTable, string text) {
 
 	// Thêm sôì 0 vaÌo sau daÞy bit cho ðôò daÌi laÌ bôòi cuÒa 8
 	int addedBit = fillBit(sequenceOfBit);
-	cout << "addbit: " << addedBit << endl;
 	string newText = getNewText(sequenceOfBit);
-	cout << "\n" << sequenceOfBit << "a\n";
 
 	ofstream fo;
 	fo.open(filename, ios::binary);
@@ -103,44 +101,68 @@ void compressToFile(string filename, vector<HuffNode*> freqTable, string text) {
 	}
 }
 
-void compressFile(const wchar_t path[100]) {
+void compressFile(const boost::filesystem::path& relative_path, string output) {
+	string fname = relative_path.generic_path().generic_string();
+	
+	string str = getStringFromFile(fname);
+	vector<HuffNode*> freqTable = initFreqTable(str);
 
-	wstring str = getStringFromFile(path);
-	string content = WidestringToString(str);
-	vector<HuffNode*> freqTable = initFreqTable(content);
-	string fname = "compress";
-
-	compressToFile("compress", freqTable, content);
+	compressToFile(output, freqTable, str);
 
 }
+//Input: Đường dẫn thư mục cần nén, đây có phải là thư mục gốc hay sub Folder, đường dẫn sub Folder
+//Nếu là thư mục gốc thì tham số cuối là chuỗi rỗng
+void compressFolder(const boost::filesystem::path& relative_path,bool root, string rname) {
+	string s;
+	using namespace boost::filesystem;
 
-void compressFolder(const wchar_t path[100]) {
-	WIN32_FIND_DATA data;
-	// Tìm tập tin đầu tiên
-	HANDLE hFile = FindFirstFile(path, &data);
-	wstring s;
+	if (!boost::filesystem::exists(relative_path)) {
+		cerr << relative_path << " does not exist!" << endl;
+		return;
+	}
 
-	do {
-		//in tên thư mục, tập tin ra màn hình
-		wprintf(L"%s\n", data.cFileName);
-		//Nếu là thư mục
-		if (data.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY) {
-			compressFolder(data.cFileName);
+	
+	/*std::cout << "rel path: " << relative_path << '\n';*/
+	//std::cout << "cwd: " << current_path() << '\n';
+	string name;
+	if (root && is_directory(relative_path)) {
+		_chdir(relative_path.generic_path().generic_string().c_str());
+		name = current_path().generic_path().generic_string() + "_compress";
+		create_directories(name);
+		cout << "Root: " << endl;
+		cout << relative_path.generic_path().generic_string().c_str() << endl;
+		cout << name << endl;
+		cout << "----------------------------" << endl;
+	}
+	else {
+		name = rname;
+		_chdir(rname.c_str()); //Cho lá
+	}
+	
+	//Duyệt thư mục
+	boost::filesystem::directory_iterator end_itr;
+
+	for (boost::filesystem::directory_iterator itr(relative_path); itr != end_itr; itr++) {
+		if (boost::filesystem::is_directory(*itr)) {
+			path Sub(*itr);
+			_chdir(name.c_str());
+			string subname = Sub.filename().generic_string() + "_compress";
+			subname= current_path().generic_path().generic_string() + "\\" + subname;
+			cout << "cwd: " << current_path() << endl;
+			cout << "Directory: " << endl;
+			cout << subname << endl;
+			
+			create_directories(subname);
+			compressFolder(*itr, false, subname);
 		}
-
-		//Nếu là tập tin
-		if (!(data.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY)) {
-			//Nén tập tin
-			/*wstring str = getStringFromFile(data.cFileName);
-			string content = WidestringToString(str);
-			vector<HuffNode*> freqTable = initFreqTable(content);
-			string fname = "compress";
-
-			compressToFile("compress", freqTable, content);*/
-			compressFile(data.cFileName);
-		}
-
-	} while (FindNextFile(hFile, &data)); // Cho đến khi không còn tập tin kế
-
-	FindClose(hFile);
+		else {
+			_chdir(name.c_str()); 
+			cout << "cwd: " << current_path() << endl;
+			cout << "**** FILE ***" << endl;
+			path File(*itr);
+			string fname =File.filename().generic_string() + "_compress";
+			cout << "File: " << fname << endl;
+			compressFile(*itr, fname);
+			}
+	}
 }

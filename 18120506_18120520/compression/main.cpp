@@ -20,7 +20,8 @@ int main()
 
 	
 	
-	compressFolder(L"E:\\Bai tap\\CTDL_Seminar_2\\*.*");
- 
+	compressFolder("C:\\Users\\Admin\\OneDrive\\Desktop\\Test",true,"");
+	
+
 	return 0;
 }

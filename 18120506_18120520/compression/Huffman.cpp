@@ -233,6 +233,6 @@ vector<HuffmanCode*> HuffmanCodes(vector<HuffNode*> freqTable)
 	int arr[MAX_TREE_HT], top = 0;
 	vector<HuffmanCode*> out(0);
 
-	printCodes(root, arr, top, out);
+	//printCodes(root, arr, top, out);
 	return out;
 }
