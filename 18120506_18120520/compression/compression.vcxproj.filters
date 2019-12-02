@@ -30,7 +30,7 @@
     <ClCompile Include="Decompress.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="UnicodeFIle.cpp">
+    <ClCompile Include="File.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -47,7 +47,7 @@
     <ClInclude Include="Decompress.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="UnicodeFile.h">
+    <ClInclude Include="File.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

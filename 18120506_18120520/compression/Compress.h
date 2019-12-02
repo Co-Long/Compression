@@ -2,20 +2,20 @@
 #include <string>
 #include <vector>
 #include <fstream>
-#include"UnicodeFile.h"
 #include "Huffman.h"
 #include "Hash.h"
+#include"File.h"
 
 using namespace std;
 
 // ChuyêÒn daÞy bit sang kiì týò 
 char bitsToChar(string code);
 // Xây dýòng baÒng tra cýìu neìn týÌ Huffman Codes
-HashTable<string>* buildCompressTable(vector<HuffmanCode*> huffCodes);
+HashTable<string>* buildCompressTable(vector<HuffmanCode*>& huffCodes);
 // Taòo daÞy bit týÌ text dýòa vaÌo baÒn tra cýìu neìn
 string getSequenceOfBit(string text, HashTable<string>* table);
 // Neìn vaÌo file
-void compressToFile(string filename, vector<HuffNode*> freqTable, string text);
+void compressToFile(string filename, vector<HuffNode*>& freqTable, string text);
 
 //Input: Đường dẫn đến tập tin cần nén, tập tin output sau khi nén
 void compressFile(const boost::filesystem::path& relative_path, string output);

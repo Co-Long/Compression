@@ -71,5 +71,5 @@ HuffNode* buildHuffmanTree(vector<HuffNode*> freqTable);
 void printCodes(HuffNode* root, int arr[], int top, vector<HuffmanCode*>& out);
 // Chuyển bit array sang dạng string
 string bitArrToString(int arr[], int n);
-vector<HuffmanCode*> HuffmanCodes(vector<HuffNode*> freqTable);
+vector<HuffmanCode*> HuffmanCodes(vector<HuffNode*>& freqTable);
 

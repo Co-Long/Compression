@@ -1,13 +1,13 @@
-#include "Decompress.h"
+ï»¿#include "Decompress.h"
 
-// ChuyêÒn kiì tıò chuyêÌn vaÌo thaÌnh daŞy 8 bit
+// ChuyÃªÃ’n kiÃ¬ tÃ½Ã² chuyÃªÃŒn vaÃŒo thaÃŒnh daÃy 8 bit
 string charToBits(char c) {
 	int dec = (int)c;
-	// KiêÒm tra extended ascii
+	// KiÃªÃ’m tra extended ascii
 	if (dec < 0) dec = dec + 129 + 127;
 	string bits = "";
 
-	// Ğoòc tıÌng bit cuÒa dec vaÌo string bits
+	// ÃoÃ²c tÃ½ÃŒng bit cuÃ’a dec vaÃŒo string bits
 	while (dec) {
 		int bit = dec & 1;
 		if (bit == 1) bits = "1" + bits;
@@ -108,4 +108,63 @@ void decompressFromFile(string src, string des) {
 	fo.close();
 
 	cout << "Done\n";
+}
+
+void decompressFile(const boost::filesystem::path& source_path, string output) {
+	decompressFromFile(source_path.generic_path().generic_string(), output);
+}
+
+void decompressFolder(const boost::filesystem::path& source_path, bool root, string rname) {
+	string s;
+	using namespace boost::filesystem;
+
+	if (!boost::filesystem::exists(source_path)) {
+		cerr << source_path << " does not exist!" << endl;
+		return;
+	}
+
+	string name;
+	if (root && is_directory(source_path)) {
+		_chdir(source_path.generic_path().generic_string().c_str());
+		name = current_path().generic_path().generic_string();
+		name.resize(name.size()-strlen("_compress"));
+		create_directories(name);
+		cout << "Root: " << endl;
+		cout << source_path.generic_path().generic_string().c_str() << endl;
+		cout << name << endl;
+		cout << "----------------------------" << endl;
+	}
+	else {
+		name = rname;
+		_chdir(rname.c_str()); //Cho lÃ¡
+	}
+
+	//Duyá»‡t thÆ° má»¥c
+	boost::filesystem::directory_iterator end_itr;
+
+	for (boost::filesystem::directory_iterator itr(source_path); itr != end_itr; itr++) {
+		if (boost::filesystem::is_directory(*itr)) {
+			path Sub(*itr);
+			_chdir(name.c_str());
+			string subname = Sub.filename().generic_string();
+			subname.resize(subname.size() - strlen("_compress"));
+			subname = current_path().generic_path().generic_string() + "\\" + subname;
+			cout << "cwd: " << current_path() << endl;
+			cout << "Directory: " << endl;
+			cout << subname << endl;
+
+			create_directories(subname);
+			decompressFolder(*itr, false, subname);
+		}
+		else {
+			_chdir(name.c_str());
+			cout << "cwd: " << current_path() << endl;
+			cout << "**** FILE ***" << endl;
+			path File(*itr);
+			string fname = File.filename().generic_string();
+			fname.resize(fname.size() - strlen("_compress"));
+			cout << "File: " << fname << endl;
+			decompressFile(*itr, fname);
+		}
+	}
 }

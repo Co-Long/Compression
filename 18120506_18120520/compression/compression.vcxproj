@@ -162,17 +162,17 @@
   <ItemGroup>
     <ClCompile Include="Compress.cpp" />
     <ClCompile Include="Decompress.cpp" />
+    <ClCompile Include="File.cpp" />
     <ClCompile Include="Hash.cpp" />
     <ClCompile Include="Huffman.cpp" />
     <ClCompile Include="main.cpp" />
-    <ClCompile Include="UnicodeFIle.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Compress.h" />
     <ClInclude Include="Decompress.h" />
+    <ClInclude Include="File.h" />
     <ClInclude Include="Hash.h" />
     <ClInclude Include="Huffman.h" />
-    <ClInclude Include="UnicodeFile.h" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="text.txt" />

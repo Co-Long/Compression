@@ -18,7 +18,7 @@ char bitsToChar(string bits) {
 }
 
 // Xây dýòng baÒng tra cýìu neìn týÌ Huffman Codes
-HashTable<string>* buildCompressTable(vector<HuffmanCode*> huffCodes) {
+HashTable<string>* buildCompressTable(vector<HuffmanCode*>& huffCodes) {
 	HashTable<string>* table = new HashTable<string>("string");
 	
 	for (int i = 0; i < huffCodes.size(); i++)
@@ -70,10 +70,11 @@ string getNewText(string sequenceOfBit) {
 	return newText;
 }
 
-void compressToFile(string filename, vector<HuffNode*> freqTable, string text) {
+void compressToFile(string filename, vector<HuffNode*>& freqTable, string text) {
 	vector<HuffmanCode*> huffCodes = HuffmanCodes(freqTable);
+	cout<<"SIZE: "<< huffCodes.size() << endl;
 	HashTable<string>* table = buildCompressTable(huffCodes);
-
+	
 	// Taòo daÞy bit týÌ text dýòa trên baÒng tra cýìu neìn
 	string sequenceOfBit = getSequenceOfBit(text, table);
 
@@ -120,10 +121,7 @@ void compressFolder(const boost::filesystem::path& relative_path,bool root, stri
 		cerr << relative_path << " does not exist!" << endl;
 		return;
 	}
-
 	
-	/*std::cout << "rel path: " << relative_path << '\n';*/
-	//std::cout << "cwd: " << current_path() << '\n';
 	string name;
 	if (root && is_directory(relative_path)) {
 		_chdir(relative_path.generic_path().generic_string().c_str());
