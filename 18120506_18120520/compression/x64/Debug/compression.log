@@ -1,6 +1,3 @@
-﻿  Huffman.cpp
-E:\Bai tap\CTDL_Seminar_2\Compression\18120506_18120520\compression\Huffman.cpp(43,51): warning C4267:  'argument': conversion from 'size_t' to 'unsigned int', possible loss of data
-E:\Bai tap\CTDL_Seminar_2\Compression\18120506_18120520\compression\Huffman.cpp(48,34): warning C4267:  '=': conversion from 'size_t' to 'unsigned int', possible loss of data
-E:\Bai tap\CTDL_Seminar_2\Compression\18120506_18120520\compression\Huffman.cpp(72,11): warning C4018:  '<': signed/unsigned mismatch
-E:\Bai tap\CTDL_Seminar_2\Compression\18120506_18120520\compression\Huffman.cpp(75,12): warning C4018:  '<': signed/unsigned mismatch
-  compression.vcxproj -> E:\Bai tap\CTDL_Seminar_2\Compression\18120506_18120520\x64\Debug\compression.exe
+﻿  Compress.cpp
+D:\DoAn2\final_compression\Compression\18120506_18120520\compression\Compress.cpp(37,29): warning C4267:  'initializing': conversion from 'size_t' to 'int', possible loss of data
+  compression.vcxproj -> D:\DoAn2\final_compression\Compression\18120506_18120520\x64\Debug\compression.exe

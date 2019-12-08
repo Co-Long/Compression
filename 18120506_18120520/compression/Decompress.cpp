@@ -26,10 +26,11 @@ string charToBits(char c) {
 vector<HuffNode*> getFreqTableFromFile(ifstream& fi) {
 	int size;
 	vector<HuffNode*> freqTable;
-
+	// Read Size of Freq Table
 	fi.read((char*)& size, sizeof(int));
+	
+	// Read Freq Table
 	freqTable.resize(size);
-
 	for (int i = 0; i < size; i++)
 	{
 		freqTable[i] = new HuffNode;
@@ -40,74 +41,88 @@ vector<HuffNode*> getFreqTableFromFile(ifstream& fi) {
 }
 
 string getCompressTextFromFile(ifstream& fi) {
-	string compressText = "";
-	char c;
+	// Get file size
+	int readSize = fi.tellg();
+	fi.seekg(0, ios::end);
+	int fsize = fi.tellg();
+	fi.seekg(readSize);
+	// Get text size
+	int textSize = fsize - readSize - sizeof(int);
 
-	while (fi.read(&c, sizeof(char))) {
-		//fi.read(&c, sizeof(char));
-		cout << c << endl;
-		compressText += c;
-	}
+	// Read Compress Text
+	char* c = new char[textSize];
+	fi.read(c, textSize);
+	string compressText(c, textSize);
 
-	cout << compressText << "*";
+	delete[]c;
+
 	return compressText;
 }
 
-string textToSequenceOfBit(string text) {
-	string sequenceOfBit = "";
-
-	for (int i = 0; i < text.length(); i++)
-	{
-		sequenceOfBit += charToBits(text[i]);
-	}
-
-	return sequenceOfBit;
-}
-
-string textFromHuffmanTree(HuffNode *root, string sequenceOfBit, int addedBit) {
-	cout << "\n" << sequenceOfBit << "a\n";
+void decompress(string compressText, string des, HuffNode* root, int addedBit) {
 	HuffNode* temp = root;
-	string text = "";
+	int length = compressText.length();
 
-	for (int i = 0; i < sequenceOfBit.length() - addedBit; i++)
+	ofstream fo;
+	fo.open(des, ios::binary);
+	
+	for (int i = 0; i < length; i++)
 	{
-		if (sequenceOfBit[i] == '0') {
-			temp = temp->left;
-		}
-		else {
-			temp = temp->right;
-		}
+		// Lower Bound => define added bit
+		int lowerBound = 0;
+		if (i == length - 1) lowerBound = addedBit;
 
-		if (isLeaf(temp)) {
-			text += temp->data;
-			temp = root;
+		// Get 1 byte 
+		unsigned int byte = (unsigned int)compressText[i];
+
+		// Search char using bit from huffman tree
+		for (int j = 7; j >= lowerBound; j--)
+		{
+			int bit = (byte >> j) & 1;
+
+			if (bit == 0) {
+				temp = temp->left;
+			}
+			else {
+				temp = temp->right;
+			}
+
+			if (isLeaf(temp)) {
+				fo.write(&temp->data, 1);
+				temp = root;
+			}
 		}
 	}
 
-	return text;
+	fo.close();
 }
+
 
 void decompressFromFile(string src, string des) {
 	ifstream fi;
-	ofstream fo;
 	fi.open(src, ios::binary);
-	fo.open(des);
 
+	// Read freq table from file and build huffman tree
 	vector<HuffNode*> freqTable = getFreqTableFromFile(fi);
 	HuffNode* root = buildHuffmanTree(freqTable);
 
+	// Read compress text from file
+	string compressText = getCompressTextFromFile(fi);
+
+	// Read numbers of added bits
 	int addedBit;
 	fi.read((char*)& addedBit, sizeof(int));
 
-	string compressText = getCompressTextFromFile(fi);
-	string sequenceOfBit = textToSequenceOfBit(compressText);
-	string text = textFromHuffmanTree(root, sequenceOfBit, addedBit);
+	// Decompress
+	decompress(compressText, des, root, addedBit);
 
-	fo << text;
+	// Delete freq table
+	for (int i = 0; i < freqTable.size(); i++)
+	{
+		delete freqTable[i];
+	}
+
 	fi.close();
-	fo.close();
-
-	cout << "Done\n";
 }
 
 void decompressFile(const boost::filesystem::path& source_path, string output) {

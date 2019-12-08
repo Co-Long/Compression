@@ -26,30 +26,35 @@ vector<HuffNode*> initFreqTable(string str) {
 //Input: file name, output: content in file
 string getStringFromFile(string filename) {
 	ifstream fi;
-	fi.open(filename);
+	fi.open(filename, ios::binary);
 	if (!fi) return "";
 
-	string str = "";
-	while (!fi.eof()) {
-		string temp;
-		getline(fi, temp);
-		str += temp + '\n';
-	}
+	// Di chuyen con tro file de xac dinh kich thuoc file
+	fi.seekg(0, ios::end);
+	int fsize = fi.tellg();
+	fi.seekg(0, ios::beg);
+
+	// read text
+	char* c = new char[fsize];
+	fi.read(c, fsize);
+	string str(c, fsize);
+
+	delete[]c;
 
 	return str;
 }
 
-wstring getStringFromFile(wstring filename) {
-	wifstream fi;
-	fi.open(filename);
-	if (!fi) return L"";
-
-	wstring str = L"";
-	while (!fi.eof()) {
-		wstring temp;
-		getline(fi, temp);
-		str += temp + L'\n';
-	}
-
-	return str;
-}
+//wstring getStringFromFile(wstring filename) {
+//	wifstream fi;
+//	fi.open(filename);
+//	if (!fi) return L"";
+//
+//	wstring str = L"";
+//	while (!fi.eof()) {
+//		wstring temp;
+//		getline(fi, temp);
+//		str += temp + L'\n';
+//	}
+//
+//	return str;
+//}

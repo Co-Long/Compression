@@ -1,23 +1,23 @@
 ﻿#include "Compress.h"
 
-// Chuyển dãy bit thành ký tự
+// Bin to Char
 char bitsToChar(string bits) {
 	int dec = 0;
 
 	for (int i = 0; i < bits.length(); i++)
 	{
-		// Thêm bit vaÌo trong dec 
+		// Add bit
 		if (bits[i] == '1') dec += 1;
-		// Dịch bit qua trái
+		// shift left
 		dec <<= 1;
 	}
-	// Diòch bit qua phaÒi ðêÒ loaòi boÒ bit dý cuôìi
+	// shift right to remove excess bit
 	dec >>= 1;
 
 	return (char)dec;
 }
 
-// Xây dýòng baÒng tra cýìu neìn týÌ Huffman Codes
+// Build Huffman Codes
 HashTable<string>* buildCompressTable(vector<HuffmanCode*>& huffCodes) {
 	HashTable<string>* table = new HashTable<string>("string");
 	
@@ -29,88 +29,92 @@ HashTable<string>* buildCompressTable(vector<HuffmanCode*>& huffCodes) {
 	return table;
 }
 
-// Taòo daÞy bit týÌ text dýòa vaÌo baÒn tra cýìu neìn
-string getSequenceOfBit(string text, HashTable<string>* table) {
-	string sequence = "";
-
-	for (int i = 0; i < text.length(); i++)
-	{
-		sequence += table->get(text[i]);
-	}
-
-	return sequence;
-}
-
-// HaÌm thêm sôì 0 sau daÞy cho ðuÒ bit vaÌ traÒ vêÌ sôì bit ðaÞ thêm
-int fillBit(string &sequenceOfBit) {
-	int addedBit = 8 - (sequenceOfBit.length() % 8);
-	cout << "addbit: " << addedBit << endl;
-	// Thêm sôì 0 sau daÞy cho ðuÒ bit
-	for (int i = 0; i < addedBit; i++)
-	{
-		sequenceOfBit += '0';
-	}
-
-	return addedBit;
-}
-
-// Tạo chuỗi text mới từ dãy bit mới
-string getNewText(string sequenceOfBit) {
-	int pos = 0;
-	int length = sequenceOfBit.length();
-	string newText = "";
-
-	// Duyêòt môÞi 8 bit ðêÒ chuyêÒn thaÌnh char
-	while (pos < length) {
-		string tempBit = sequenceOfBit.substr(pos, 8);
-		newText += bitsToChar(tempBit);
-		pos += 8;
-	}
-	//cout << newText.length();
-	return newText;
-}
-
-void compressToFile(string filename, vector<HuffNode*>& freqTable, string text) {
-	vector<HuffmanCode*> huffCodes = HuffmanCodes(freqTable);
-	cout<<"SIZE: "<< huffCodes.size() << endl;
-	HashTable<string>* table = buildCompressTable(huffCodes);
-	
-	// Taòo daÞy bit týÌ text dýòa trên baÒng tra cýìu neìn
-	string sequenceOfBit = getSequenceOfBit(text, table);
-
-	// Thêm sôì 0 vaÌo sau daÞy bit cho ðôò daÌi laÌ bôòi cuÒa 8
-	int addedBit = fillBit(sequenceOfBit);
-	string newText = getNewText(sequenceOfBit);
-
+void compress(string filename, vector<HuffNode*> freqTable, HashTable<string>* table, string text) {
 	ofstream fo;
 	fo.open(filename, ios::binary);
 
-	if (fo) {
-		int size = freqTable.size();
-		fo.write((char*)&size, sizeof(int));
+	// write freq table size 
+	int size = freqTable.size();
 
-		for (int i = 0; i < size; i++)
-		{
-			fo.write((char*)freqTable[i], sizeof(HuffNode));
+	fo.write((char*)& size, sizeof(int));
+
+	// write freq table
+	for (int i = 0; i < size; i++)
+	{
+		fo.write((char*)freqTable[i], sizeof(HuffNode));
+	}
+	
+	// write compressed text
+	int temp = 0;
+	int count = 0;
+	int length = 0;
+	for (int i = 0; i < text.length(); i++) {
+		string* bin = table->get(text[i]);
+		// Add bits to bin
+		for (int j = 0; j < (*bin).length(); j++) {
+			if ((*bin)[j] == '1') {
+				temp += 1;
+			}
+			else {
+				temp += 0;
+			}
+			count++;
+			// When bin length is 8, write it to file 
+			if (count == 8) {
+				length++;
+				char c = temp;
+				fo.write(&c, 1);
+				temp = 0;
+				count = 0;
+
+			}
+			else temp <<= 1;
+		}
+	}
+
+	// Add 0-bits to fill last bin
+	int addedBit = 0;
+	if (count > 0) {
+		while (count != 8) {
+			addedBit++;
+			temp <<= 1;
+			count++;
 		}
 
-		fo.write((char*)& addedBit, sizeof(int));
+		temp >>= 1;
+		char c = temp;
+		fo.write(&c, 1);
 
-		fo.write(newText.c_str(), newText.length());
-
-		fo.close();
 	}
+	// write numbers of added bits to file
+	fo.write((char*)& addedBit, sizeof(int));
+}
+
+void compressToFile(string filename, vector<HuffNode*>& freqTable, string text) {
+	// Create list of huff codes from freq table and build compress table
+	vector<HuffmanCode*> huffCodes = HuffmanCodes(freqTable);
+	HashTable<string>* table = buildCompressTable(huffCodes);
+
+	// Compress
+	compress(filename, freqTable, table, text);
 }
 
 void compressFile(const boost::filesystem::path& relative_path, string output) {
 	string fname = relative_path.generic_path().generic_string();
 	
+	// Read text from file then initialize freq table
 	string str = getStringFromFile(fname);
 	vector<HuffNode*> freqTable = initFreqTable(str);
 
 	compressToFile(output, freqTable, str);
 
+	// Delete freq table
+	for (int i = 0; i < freqTable.size(); i++)
+	{
+		delete freqTable[i];
+	}
 }
+
 //Input: Đường dẫn thư mục cần nén, đây có phải là thư mục gốc hay sub Folder, đường dẫn sub Folder
 //Nếu là thư mục gốc thì tham số cuối là chuỗi rỗng
 void compressFolder(const boost::filesystem::path& relative_path,bool root, string rname) {

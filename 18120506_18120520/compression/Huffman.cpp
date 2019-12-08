@@ -210,8 +210,7 @@ void printCodes(HuffNode* root, int arr[], int top, vector<HuffmanCode*> &out)
 	//Nếu là lá thì in ra giá trị của lá và mã bit sau khi nén của nó
 	if (isLeaf(root)) {
 
-		cout << root->data<<": ";
-		printArr(arr, top);
+		//cout << root->data<<": ";
 
 		HuffmanCode* huffcode = new HuffmanCode;
 		huffcode->c = root->data;
