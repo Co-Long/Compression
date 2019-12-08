@@ -1,5 +1,6 @@
 #pragma once
 #include <string>
+#include <map>
 #include"Huffman.h"
 #include"Hash.h"
 #include"File.h"

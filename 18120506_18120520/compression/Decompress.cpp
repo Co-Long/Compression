@@ -24,6 +24,10 @@ string charToBits(char c) {
 }
 
 vector<HuffNode*> getFreqTableFromFile(ifstream& fi) {
+	// no-used, just for bypass first byte
+	char isLZW; // 0 is huffman
+	fi.read(&isLZW, sizeof(char));
+
 	int size;
 	vector<HuffNode*> freqTable;
 	// Read Size of Freq Table
@@ -125,8 +129,71 @@ void decompressFromFile(string src, string des) {
 	fi.close();
 }
 
+// LZW
+void decompressFromFileLZW(string src, string des) {
+	ifstream fi2;
+	fi2.open(src, ios::binary);
+	ofstream fo2;
+	fo2.open(des, ios::binary);
+
+	// no-used, just for bypass first byte
+	char isLZW; // 0 is huffman
+	fi2.read(&isLZW, sizeof(char));
+
+	unsigned short d;
+	vector<unsigned short> compressed(0);
+
+	while (fi2.read((char*)& d, 2)) {
+		compressed.push_back(d);
+	}
+	cout << compressed.size() << endl;
+	int dictSize2 = 256;
+	// Xay dung tu dien ban dau gom 256 tu don
+	map<unsigned short, string> dict2;
+	for (unsigned short i = 0; i < 256; i++) {
+		dict2[i] = string(1, i);
+	}
+
+	cout << "size: " << dict2.size() << endl;
+
+	string word, entry;
+	word = dict2[compressed[0]];
+	string result = word;
+
+	for (int i = 1; i < compressed.size(); i++) {
+		unsigned short value = compressed[i];
+		if (dict2.count(value)) {
+			entry = dict2[value];
+		}
+		else if (value == dictSize2) {
+			entry = word + word[0];
+		}
+		else {
+			cout << "Loi roi";
+			break;
+		}
+
+		word += entry[0];
+		if (dictSize2 <= 65535) dict2[dictSize2++] = word;
+		result += entry;
+		word = entry;
+	}
+	cout << result.length();
+	fo2.write(result.c_str(), result.length());
+
+	fi2.close();
+	fo2.close();
+}
+
 void decompressFile(const boost::filesystem::path& source_path, string output) {
-	decompressFromFile(source_path.generic_path().generic_string(), output);
+	ifstream fi;
+	fi.open(source_path.generic_path().generic_string(), ios::binary);
+	char isLZW;
+	fi.read(&isLZW, sizeof(char));
+	fi.close();
+
+	if (isLZW) decompressFromFileLZW(source_path.generic_path().generic_string(), output);
+	else decompressFromFile(source_path.generic_path().generic_string(), output);
 }
 
 void decompressFolder(const boost::filesystem::path& source_path, bool root, string rname) {

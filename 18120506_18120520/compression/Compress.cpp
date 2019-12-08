@@ -33,6 +33,9 @@ void compress(string filename, vector<HuffNode*> freqTable, HashTable<string>* t
 	ofstream fo;
 	fo.open(filename, ios::binary);
 
+	char isLZW = 0; // 0 is huffman
+	fo.write(&isLZW, sizeof(char));
+
 	// write freq table size 
 	int size = freqTable.size();
 
@@ -115,9 +118,62 @@ void compressFile(const boost::filesystem::path& relative_path, string output) {
 	}
 }
 
+// LZW
+void compressToFileLZW(string filename, string text) {
+	
+	map<string, unsigned short> dict;
+	int dictSize = 256;
+	// Xay dung tu dien ban dau gom 256 tu don
+	for (unsigned short i = 0; i < 256; i++) {
+		dict[string(1, i)] = i;
+	}
+
+	ofstream fo;
+	fo.open(filename, ios::binary);
+	char isLZW = 1; // 0 is huffman
+	fo.write(&isLZW, sizeof(char));
+
+	//string output = "";
+	int64_t count = 0;
+	string buffer = "";
+	string temp;
+	for (int i = 0; i < text.length(); i++) {
+		temp = buffer + text[i];
+		// Ton tai trong tu dien
+		if (dict.count(temp)) {
+			buffer = temp;
+		}
+		else if (dictSize > 65535) {
+			fo.write((char*)& dict[buffer], sizeof(unsigned short));
+			buffer = text[i];
+			count++;
+		}
+		else {
+			dict[temp] = dictSize++;
+			fo.write((char*)& dict[buffer], sizeof(unsigned short));
+			buffer = text[i];
+			count++;
+		}
+	}
+	// Write rest text in buffer to file
+	if (buffer != "") {
+		fo.write((char*)& dict[buffer], sizeof(unsigned short));
+	}
+
+	fo.close();
+}
+
+void compressFileLZW(const boost::filesystem::path& relative_path, string output) {
+	string fname = relative_path.generic_path().generic_string();
+
+	// Read text from file then initialize freq table
+	string str = getStringFromFile(fname);
+	compressToFileLZW(output, str);
+}
+
 //Input: Đường dẫn thư mục cần nén, đây có phải là thư mục gốc hay sub Folder, đường dẫn sub Folder
 //Nếu là thư mục gốc thì tham số cuối là chuỗi rỗng
-void compressFolder(const boost::filesystem::path& relative_path,bool root, string rname) {
+void compressFolder(const boost::filesystem::path& relative_path,bool root, string rname, bool isLZW) {
 	string s;
 	using namespace boost::filesystem;
 
@@ -155,7 +211,7 @@ void compressFolder(const boost::filesystem::path& relative_path,bool root, stri
 			cout << subname << endl;
 			
 			create_directories(subname);
-			compressFolder(*itr, false, subname);
+			compressFolder(*itr, false, subname, isLZW);
 		}
 		else {
 			_chdir(name.c_str()); 
@@ -164,7 +220,18 @@ void compressFolder(const boost::filesystem::path& relative_path,bool root, stri
 			path File(*itr);
 			string fname =File.filename().generic_string() + "_compress";
 			cout << "File: " << fname << endl;
-			compressFile(*itr, fname);
+
+			// Kiem tra duoi file txt
+			regex textCheck(".+\\.txt$");
+			const boost::filesystem::path relative_path = *itr;
+			string srcname = relative_path.generic_path().generic_string();
+
+			// Nen LZW xay ra khi duoi file la txt va che do LZW
+			if (isLZW && regex_match(srcname, textCheck)) {
+				compressFileLZW(*itr, fname);
 			}
+			else compressFile(*itr, fname); 
+				
+		}
 	}
 }
