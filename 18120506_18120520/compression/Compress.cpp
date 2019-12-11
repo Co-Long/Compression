@@ -1,4 +1,5 @@
 ﻿#include "Compress.h"
+using namespace std;
 
 // Bin to Char
 char bitsToChar(string bits) {

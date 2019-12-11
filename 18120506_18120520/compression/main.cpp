@@ -1,6 +1,7 @@
 ﻿// C program for Huffman Coding 
 #include <stdio.h> 
 #include <stdlib.h>
+#include"boost/filesystem.hpp" 
 #include"Huffman.h"
 #include"Hash.h"
 #include "Compress.h"

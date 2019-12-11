@@ -4,6 +4,7 @@
 #include <fstream>
 #include <map>
 #include <regex>
+#include"boost/filesystem.hpp" 
 #include "Huffman.h"
 #include "Hash.h"
 #include"File.h"

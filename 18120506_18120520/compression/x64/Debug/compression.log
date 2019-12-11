@@ -1,8 +1,10 @@
 ﻿  Compress.cpp
-D:\DoAn2\final_compression\Compression\18120506_18120520\compression\Compress.cpp(40,29): warning C4267:  'initializing': conversion from 'size_t' to 'int', possible loss of data
-D:\DoAn2\final_compression\Compression\18120506_18120520\compression\Compress.cpp(128,18): warning C4244:  'argument': conversion from 'unsigned short' to 'const _Elem', possible loss of data
-D:\DoAn2\final_compression\Compression\18120506_18120520\compression\Compress.cpp(128,18): warning C4244:         with
-D:\DoAn2\final_compression\Compression\18120506_18120520\compression\Compress.cpp(128,18): warning C4244:         [
-D:\DoAn2\final_compression\Compression\18120506_18120520\compression\Compress.cpp(128,18): warning C4244:             _Elem=char
-D:\DoAn2\final_compression\Compression\18120506_18120520\compression\Compress.cpp(128,18): warning C4244:         ]
-  compression.vcxproj -> D:\DoAn2\final_compression\Compression\18120506_18120520\x64\Debug\compression.exe
+E:\Bai tap\CTDL_Seminar_2\Compression\18120506_18120520\compression\Compress.cpp(41,29): warning C4267:  'initializing': conversion from 'size_t' to 'int', possible loss of data
+  main.cpp
+  Generating Code...
+E:\Bai tap\CTDL_Seminar_2\Compression\18120506_18120520\compression\Compress.cpp(129,18): warning C4244:  'argument': conversion from 'unsigned short' to 'const _Elem', possible loss of data
+E:\Bai tap\CTDL_Seminar_2\Compression\18120506_18120520\compression\Compress.cpp(129,18): warning C4244:         with
+E:\Bai tap\CTDL_Seminar_2\Compression\18120506_18120520\compression\Compress.cpp(129,18): warning C4244:         [
+E:\Bai tap\CTDL_Seminar_2\Compression\18120506_18120520\compression\Compress.cpp(129,18): warning C4244:             _Elem=char
+E:\Bai tap\CTDL_Seminar_2\Compression\18120506_18120520\compression\Compress.cpp(129,18): warning C4244:         ]
+  compression.vcxproj -> E:\Bai tap\CTDL_Seminar_2\Compression\18120506_18120520\x64\Debug\compression.exe
